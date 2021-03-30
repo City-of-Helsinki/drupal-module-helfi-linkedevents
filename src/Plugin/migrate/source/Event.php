@@ -11,14 +11,13 @@ namespace Drupal\helfi_linkedevents\Plugin\migrate\source;
  *   id = "linkedevents_event"
  * )
  */
-class Event extends LinkedEvents
-{
+class Event extends LinkedEvents {
 
   /**
    * {@inheritdoc}
    */
-  public function __toString()
-  {
+  public function __toString() {
     return 'LinkedEventsEvent';
   }
+
 }

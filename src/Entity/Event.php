@@ -7,7 +7,6 @@ namespace Drupal\helfi_linkedevents\Entity;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionLogEntityTrait;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\helfi_api_base\Entity\RemoteEntityBase;
 
@@ -61,8 +60,7 @@ use Drupal\helfi_api_base\Entity\RemoteEntityBase;
  *   field_ui_base_route = "linkedevents_event.settings"
  * )
  */
-final class Event extends RemoteEntityBase
-{
+final class Event extends RemoteEntityBase {
 
   use RevisionLogEntityTrait;
 
@@ -70,14 +68,16 @@ final class Event extends RemoteEntityBase
    * Adds the given data source.
    *
    * @param array $offer
-   *   The values for a single offer
+   *   The values for a single offer.
    *
    * @return $this
    *   The self.
    */
-  public function addOffer(array $offer): self
-  {
-    // $offer['is_free'], $offer['info_url'], $offer['description'], $offer['price']
+  public function addOffer(array $offer): self {
+    // $offer['is_free']
+    // $offer['info_url']
+    // $offer['description']
+    // $offer['price']
     $this->get('offers')->appendItem($offer['price'] . " " . $offer['info_url']);
     return $this;
   }
@@ -85,8 +85,7 @@ final class Event extends RemoteEntityBase
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type)
-  {
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['name'] = BaseFieldDefinition::create('string')
@@ -141,7 +140,7 @@ final class Event extends RemoteEntityBase
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    // info url
+    // Info url.
     $fields['info_url'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Info URL'))
       ->setTranslatable(TRUE)
@@ -150,7 +149,7 @@ final class Event extends RemoteEntityBase
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    // start time: datetime
+    // Start time: datetime.
     $fields['start_time'] = BaseFieldDefinition::create('datetime')
       ->setLabel(t('Start time'))
       ->setDefaultValue('')
@@ -167,7 +166,7 @@ final class Event extends RemoteEntityBase
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // end time: datetime
+    // End time: datetime.
     $fields['end_time'] = BaseFieldDefinition::create('datetime')
       ->setLabel(t('End time'))
       ->setDefaultValue('')
@@ -184,14 +183,14 @@ final class Event extends RemoteEntityBase
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // offers
-    $fields['offers'] = BaseFieldDefinition::create('list_string')
+    // Offers.
+    $fields['offers'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Offers'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    // sub_events 1-n string
+    // sub_events 1-n string.
     $fields['sub_events'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Sub events'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
@@ -199,7 +198,7 @@ final class Event extends RemoteEntityBase
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    // keywords 1-n
+    // Keywords 1-n.
     $fields['keywords'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Keywords'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
@@ -207,7 +206,7 @@ final class Event extends RemoteEntityBase
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    // images (links only)
+    // Images (links only)
     $fields['images'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Images'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
@@ -215,7 +214,7 @@ final class Event extends RemoteEntityBase
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    // videos (links only)
+    // Videos (links only)
     $fields['videos'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Videos'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
@@ -223,7 +222,7 @@ final class Event extends RemoteEntityBase
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    // obsolete
+    // Obsolete.
     $fields['origins'] = BaseFieldDefinition::create('key_value')
       ->setLabel(new TranslatableMarkup('Origins'))
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
@@ -232,64 +231,65 @@ final class Event extends RemoteEntityBase
 
     return $fields;
   }
+
 }
 
 /*
-  name x
-  location
-    @id : "https://api.hel.fi/linkedevents/v1/place/tprek:21319/"
-  provider x
-  description x
-  short_description x
-  info_url x
-  start_time
-  end_time
-  offers
-    "is_free": false,
-    "info_url": {
-        "fi": "https://www.designmuseum.fi/",
-        "sv": "https://www.designmuseum.fi/",
-        "en": "https://www.designmuseum.fi/"
-    },
-    "description": {
-        "fi": "",
-        "sv": "",
-        "en": ""
-    },
-    "price": {
-        "fi": "https://www.designmuseum.fi/",
-        "sv": "https://www.designmuseum.fi/",
-        "en": "https://www.designmuseum.fi/"
-    }
-  images
-    "id": 68000,
-    "license": "event_only",
-    "created_time": "2020-11-10T13:56:51.426605Z",
-    "last_modified_time": "2020-11-10T13:56:51.426631Z",
-    "name": "Iittala -kaleidoskooppi",
-    "url": "https://api.hel.fi/linkedevents/media/images/Iittala_pressikuva.jpg",
-    "cropping": "768,0,2067,1299",
-    "photographer_name": "Designmuseo / Iittala",
-    "alt_text": "Lasia ja lasinpuhaltajia",
-    "data_source": "helsinki",
-    "publisher": "ytj:0586977-6",
-    "@id": "https://api.hel.fi/linkedevents/v1/image/68000/",
-    "@context": "http://schema.org",
-    "@type": "ImageObject"
-  videos
-    ...
-  sub_events
-    {
-      "@id": "https://api.hel.fi/linkedevents/v1/event/helsinki:af4grg2osu/"
-    },
-    {
-      "@id": "https://api.hel.fi/linkedevents/v1/event/helsinki:af4grg2od4/"
-    }
-  keywords
-    {
-      "@id": "https://api.hel.fi/linkedevents/v1/keyword/kulke:31/"
-    },
-    {
-      "@id": "https://api.hel.fi/linkedevents/v1/keyword/kulke:49/"
-    }
-*/
+name x
+location
+@id : "https://api.hel.fi/linkedevents/v1/place/tprek:21319/"
+provider x
+description x
+short_description x
+info_url x
+start_time
+end_time
+offers
+"is_free": false,
+"info_url": {
+"fi": "https://www.designmuseum.fi/",
+"sv": "https://www.designmuseum.fi/",
+"en": "https://www.designmuseum.fi/"
+},
+"description": {
+"fi": "",
+"sv": "",
+"en": ""
+},
+"price": {
+"fi": "https://www.designmuseum.fi/",
+"sv": "https://www.designmuseum.fi/",
+"en": "https://www.designmuseum.fi/"
+}
+images
+"id": 68000,
+"license": "event_only",
+"created_time": "2020-11-10T13:56:51.426605Z",
+"last_modified_time": "2020-11-10T13:56:51.426631Z",
+"name": "Iittala -kaleidoskooppi",
+"url": "https://api.hel.fi/linkedevents/media/images/Iittala_pressikuva.jpg",
+"cropping": "768,0,2067,1299",
+"photographer_name": "Designmuseo / Iittala",
+"alt_text": "Lasia ja lasinpuhaltajia",
+"data_source": "helsinki",
+"publisher": "ytj:0586977-6",
+"@id": "https://api.hel.fi/linkedevents/v1/image/68000/",
+"@context": "http://schema.org",
+"@type": "ImageObject"
+videos
+...
+sub_events
+{
+"@id": "https://api.hel.fi/linkedevents/v1/event/helsinki:af4grg2osu/"
+},
+{
+"@id": "https://api.hel.fi/linkedevents/v1/event/helsinki:af4grg2od4/"
+}
+keywords
+{
+"@id": "https://api.hel.fi/linkedevents/v1/keyword/kulke:31/"
+},
+{
+"@id": "https://api.hel.fi/linkedevents/v1/keyword/kulke:49/"
+}
+ */

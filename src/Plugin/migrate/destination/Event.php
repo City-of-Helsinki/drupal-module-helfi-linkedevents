@@ -14,36 +14,32 @@ use Drupal\migrate\Row;
  *   id = "linkedevents_event",
  * )
  */
-final class Event extends TranslatableEntityBase
-{
+final class Event extends TranslatableEntityBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static function getEntityTypeId($plugin_id)
-  {
+  protected static function getEntityTypeId($plugin_id) {
     return 'linkedevents_event';
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatableFields(): array
-  {
+  protected function getTranslatableFields(): array {
     return [
       'name' => 'name',
       'description' => 'description',
       'short_description' => 'short_description',
       'provider' => 'provider',
-      'info_url' => 'info_url'
+      'info_url' => 'info_url',
     ];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getEntity(Row $row, array $old_destination_id_values)
-  {
+  public function getEntity(Row $row, array $old_destination_id_values) {
     /** @var \Drupal\helfi_linkedevents\Entity\Event $entity */
     $entity = parent::getEntity($row, $old_destination_id_values);
 
@@ -60,4 +56,5 @@ final class Event extends TranslatableEntityBase
 
     return $entity;
   }
+
 }

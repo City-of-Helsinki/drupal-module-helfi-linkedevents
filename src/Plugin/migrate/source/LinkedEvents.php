@@ -12,8 +12,7 @@ use Drupal\helfi_api_base\Plugin\migrate\source\HttpSourcePluginBase;
 /**
  * Source plugin base for retrieving data from Linked Events.
  */
-abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFactoryPluginInterface
-{
+abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The total count.
@@ -32,16 +31,14 @@ abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFac
   /**
    * {@inheritdoc}
    */
-  public function getIds()
-  {
+  public function getIds() {
     return ['id' => ['type' => 'string']];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function count($refresh = FALSE)
-  {
+  public function count($refresh = FALSE) {
     if (!$this->count) {
       $this->count = $this->doCount();
     }
@@ -51,8 +48,7 @@ abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFac
   /**
    * Builds the metadata.
    */
-  protected function buildUrls(): self
-  {
+  protected function buildUrls(): self {
     $this->count();
     $currentUrl = UrlHelper::parse($this->configuration['url']);
 
@@ -75,8 +71,7 @@ abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFac
   /**
    * {@inheritdoc}
    */
-  protected function doCount(): int
-  {
+  protected function doCount(): int {
     if ($limit = $this->getLimit()) {
       return $limit;
     }
@@ -88,8 +83,7 @@ abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFac
   /**
    * {@inheritdoc}
    */
-  public function fields()
-  {
+  public function fields() {
     return [];
   }
 
@@ -99,15 +93,13 @@ abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFac
    * @param array $item
    *   The item.
    */
-  protected function processItem(array &$item): void
-  {
+  protected function processItem(array &$item): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function initializeListIterator(): \Iterator
-  {
+  protected function initializeListIterator(): \Iterator {
     $this->buildUrls();
 
     $processed = 0;
@@ -134,4 +126,5 @@ abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFac
       }
     }
   }
+
 }
