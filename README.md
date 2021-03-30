@@ -1,4 +1,4 @@
-# Drupal Hauki integration
+# Drupal Linked Events integration
 
 ![CI](https://github.com/City-of-Helsinki/drupal-module-helfi-linkedevents/workflows/CI/badge.svg)
 
