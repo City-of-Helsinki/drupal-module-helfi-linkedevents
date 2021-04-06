@@ -20,7 +20,6 @@ use Drupal\helfi_api_base\Entity\RemoteEntityBase;
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
- *     "storage" = "Drupal\helfi_linkedevents\Entity\Storage\EventStorage",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "access" = "Drupal\helfi_api_base\Entity\Access\RemoteEntityAccess",
  *     "form" = {
@@ -65,20 +64,100 @@ final class Event extends RemoteEntityBase {
   use RevisionLogEntityTrait;
 
   /**
-   * Adds the given data source.
+   * Adds the given offer.
    *
-   * @param array $offer
-   *   The values for a single offer.
+   * @param \Drupal\helfi_linkedevents\Entity\Offer $offer
+   *   The offer.
    *
    * @return $this
    *   The self.
    */
-  public function addOffer(array $offer): self {
-    // $offer['is_free']
-    // $offer['info_url']
-    // $offer['description']
-    // $offer['price']
-    $this->get('offers')->appendItem($offer['price'] . " " . $offer['info_url']);
+  public function addOffer(Offer $offer) : self {
+    if (!$this->hasOffer($offer)) {
+      $this->get('offers')->appendItem($offer);
+    }
+    return $this;
+  }
+
+  /**
+   * Removes the given offer.
+   *
+   * @param \Drupal\helfi_linkedevents\Entity\Offer $offer
+   *   The offer.
+   *
+   * @return $this
+   *   The self.
+   */
+  public function removeOffer(Offer $offer) : self {
+    $index = $this->getOfferIndex($offer);
+    if ($index !== FALSE) {
+      $this->get('offers')->offsetUnset($index);
+    }
+    return $this;
+  }
+
+  /**
+   * Checks whether the offer exists or not.
+   *
+   * @param \Drupal\helfi_linkedevents\Entity\Offer $offer
+   *   The offer.
+   *
+   * @return bool
+   *   Whether we have given offer or not.
+   */
+  public function hasOffer(Offer $offer) : bool {
+    return $this->getOfferIndex($offer) !== FALSE;
+  }
+
+  /**
+   * Gets the index of the given offer.
+   *
+   * @param \Drupal\helfi_linkedevents\Entity\Offer $offer
+   *   The offer.
+   *
+   * @return int|bool
+   *   The index of the given offer, or FALSE if not found.
+   */
+  protected function getOfferIndex(Offer $offer) {
+    $values = $this->get('offers')->getValue();
+    $ids = array_map(function ($value) {
+      return $value['target_id'];
+    }, $values);
+
+    return array_search($offer->id(), $ids);
+  }
+
+  /**
+   * Gets the data.
+   *
+   * @param string $key
+   *   The key.
+   * @param null|mixed $default
+   *   The default value.
+   *
+   * @return mixed|null
+   *   The data.
+   */
+  public function getData(string $key, $default = NULL) {
+    $data = [];
+    if (!$this->get('data')->isEmpty()) {
+      $data = $this->get('data')->first()->getValue();
+    }
+    return isset($data[$key]) ? $data[$key] : $default;
+  }
+  /**
+   * Sets the data.
+   *
+   * @param string $key
+   *   The key.
+   * @param mixed $value
+   *   The value.
+   *
+   * @return $this
+   *   The self.
+   */
+  public function setData(string $key, $value) : self {
+    $this->get('data')->__set($key, $value);
     return $this;
   }
 
@@ -115,12 +194,12 @@ final class Event extends RemoteEntityBase {
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['short_description'] = BaseFieldDefinition::create('string')
+    $fields['short_description'] = BaseFieldDefinition::create('text_long')
       ->setLabel(new TranslatableMarkup('Short description'))
       ->setReadOnly(TRUE)
-      ->setSettings([
-        'max_length' => 255,
-        'text_processing' => 0,
+      ->setDisplayOptions('form', [
+        'type' => 'text_textarea',
+        'rows' => 6,
       ])
       ->setTranslatable(TRUE)
       ->setDefaultValue('')
@@ -183,9 +262,15 @@ final class Event extends RemoteEntityBase {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    // Offers.
-    $fields['offers'] = BaseFieldDefinition::create('string')
+      // Offers.
+      $fields['offers'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(new TranslatableMarkup('Offers'))
+      ->setSettings([
+        'target_type' => 'linkedevents_offer',
+        'handler_settings' => [
+          'target_bundles' => ['linkedevents_offer'],
+        ],
+      ])
       ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
@@ -222,74 +307,11 @@ final class Event extends RemoteEntityBase {
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-    // Obsolete.
-    $fields['origins'] = BaseFieldDefinition::create('key_value')
-      ->setLabel(new TranslatableMarkup('Origins'))
-      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
-      ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayConfigurable('form', TRUE);
+      $fields['data'] = BaseFieldDefinition::create('map')
+      ->setLabel(new TranslatableMarkup('Data'))
+      ->setDescription(new TranslatableMarkup('A serialized array of additional data.'));
 
     return $fields;
   }
 
 }
-
-/*
-name x
-location
-@id : "https://api.hel.fi/linkedevents/v1/place/tprek:21319/"
-provider x
-description x
-short_description x
-info_url x
-start_time
-end_time
-offers
-"is_free": false,
-"info_url": {
-"fi": "https://www.designmuseum.fi/",
-"sv": "https://www.designmuseum.fi/",
-"en": "https://www.designmuseum.fi/"
-},
-"description": {
-"fi": "",
-"sv": "",
-"en": ""
-},
-"price": {
-"fi": "https://www.designmuseum.fi/",
-"sv": "https://www.designmuseum.fi/",
-"en": "https://www.designmuseum.fi/"
-}
-images
-"id": 68000,
-"license": "event_only",
-"created_time": "2020-11-10T13:56:51.426605Z",
-"last_modified_time": "2020-11-10T13:56:51.426631Z",
-"name": "Iittala -kaleidoskooppi",
-"url": "https://api.hel.fi/linkedevents/media/images/Iittala_pressikuva.jpg",
-"cropping": "768,0,2067,1299",
-"photographer_name": "Designmuseo / Iittala",
-"alt_text": "Lasia ja lasinpuhaltajia",
-"data_source": "helsinki",
-"publisher": "ytj:0586977-6",
-"@id": "https://api.hel.fi/linkedevents/v1/image/68000/",
-"@context": "http://schema.org",
-"@type": "ImageObject"
-videos
-...
-sub_events
-{
-"@id": "https://api.hel.fi/linkedevents/v1/event/helsinki:af4grg2osu/"
-},
-{
-"@id": "https://api.hel.fi/linkedevents/v1/event/helsinki:af4grg2od4/"
-}
-keywords
-{
-"@id": "https://api.hel.fi/linkedevents/v1/keyword/kulke:31/"
-},
-{
-"@id": "https://api.hel.fi/linkedevents/v1/keyword/kulke:49/"
-}
- */

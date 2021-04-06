@@ -11,7 +11,7 @@ label: 'Linked Events Event'
 source:
   plugin: linkedevents_event
   track_changes: true
-  url: 'https://api.hel.fi/linkedevents/v1/event/?start=today'
+  url: 'https://api.hel.fi/linkedevents/v1/event/?start=today&include=keywords,location'
   ids:
     id:
       type: string
