@@ -9,3 +9,4 @@ dependencies:
   - key_value_field
   - content_translation
   - language
+  - migrate_drupal

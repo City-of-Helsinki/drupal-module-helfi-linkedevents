@@ -145,6 +145,7 @@ final class Event extends RemoteEntityBase {
     }
     return isset($data[$key]) ? $data[$key] : $default;
   }
+
   /**
    * Sets the data.
    *
@@ -262,8 +263,8 @@ final class Event extends RemoteEntityBase {
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-      // Offers.
-      $fields['offers'] = BaseFieldDefinition::create('entity_reference')
+    // Offers.
+    $fields['offers'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(new TranslatableMarkup('Offers'))
       ->setSettings([
         'target_type' => 'linkedevents_offer',
@@ -307,7 +308,7 @@ final class Event extends RemoteEntityBase {
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayConfigurable('form', TRUE);
 
-      $fields['data'] = BaseFieldDefinition::create('map')
+    $fields['data'] = BaseFieldDefinition::create('map')
       ->setLabel(new TranslatableMarkup('Data'))
       ->setDescription(new TranslatableMarkup('A serialized array of additional data.'));
 

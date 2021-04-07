@@ -44,6 +44,7 @@ class Offer extends ContentEntity {
       if ($data) {
         $data['id'] = hash('sha256', json_encode($data));
         $data['langcode'] = $entity->language()->getId();
+        $data['parent_id'] = $entity->id();
         yield $data;
       }
     }

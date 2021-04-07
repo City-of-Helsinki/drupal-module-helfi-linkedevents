@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\helfi_linkedevents\Plugin\migrate\destination;
 
 use Drupal\helfi_api_base\Plugin\migrate\destination\TranslatableEntityBase;
-use Drupal\helfi_linkedevents\Entity\Offer;
 use Drupal\migrate\Row;
+use Drupal\helfi_linkedevents\Entity\Event;
 
 /**
  * Provides a destination plugin for Linked Offers offer entities.
@@ -40,7 +40,12 @@ final class Offers extends TranslatableEntityBase {
   public function getEntity(Row $row, array $old_destination_id_values) {
     /** @var \Drupal\helfi_linkedevents\Entity\Offer $entity */
     $entity = parent::getEntity($row, $old_destination_id_values);
-    var_dump($row);
+
+    if ($parent_id = $row->getSourceProperty('parent_id')) {
+      /** @var \Drupal\helfi_linkedevents\Entity\Event $event */
+      $event = Event::load($parent_id);
+      $event->addOffer($entity)->save();
+    }
 
     return $entity;
   }

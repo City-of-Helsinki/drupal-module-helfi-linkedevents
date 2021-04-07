@@ -20,6 +20,10 @@ source:
       type: string
 process:
   id: id
+  is_free: is_free
+  price: price
 destination:
   plugin: linkedevents_offer
-migration_dependencies: {}
+migration_dependencies:
+  optional:
+    - linkedevents_event
