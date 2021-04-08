@@ -37,8 +37,8 @@ class Offer extends ContentEntity {
       ->getStorage($this->entityType->id());
     foreach ($ids as $id) {
       /**
-* @var \Drupal\Core\Entity\ContentEntityInterface $entity
-*/
+      * @var \Drupal\Core\Entity\ContentEntityInterface $entity
+      */
       $entity = $storage->load($id);
       $data = $entity->getData('offer');
       if ($data) {

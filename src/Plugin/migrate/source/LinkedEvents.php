@@ -54,9 +54,8 @@ abstract class LinkedEvents extends HttpSourcePluginBase implements ContainerFac
 
     $limit = $currentUrl['query']['page_size'] ?? 100;
 
-    // The api is sorted by oldest item first, start fetching data from the
-    // last page to make sure we always get the newest items first.
-    for ($i = ceil($this->count / $limit); $i > 0; $i--) {
+    // The api is sorted by newest changed item first.
+    for ($i = 0; $i < ceil($this->count / $limit); $i++) {
       $currentUrl['query']['page'] = $i;
 
       $this->urls[] = Url::fromUri($currentUrl['path'], [
