@@ -13,7 +13,9 @@ Integrates [Linked Events](https://api.hel.fi/linkedevents/v1/) with Drupal.
 Available migrations:
 
 - `linkedevents_event`
+- `linkedevents_offer`
 
+Note: run migrations in this order, since running offer migration requires events to exist.
 ### Running migrations
 
 Running a single migration:
