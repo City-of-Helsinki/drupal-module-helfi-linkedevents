@@ -10,3 +10,4 @@ dependencies:
   - language
   - migrate_drupal
   - link
+  - datetime
