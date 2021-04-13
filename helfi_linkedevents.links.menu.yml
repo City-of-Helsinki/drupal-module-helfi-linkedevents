@@ -8,5 +8,5 @@ entity.linkedevents_event.collection:
   title: Linked Events - Event entities
   description: List of Linked Events event entities
   route_name: entity.linkedevents_event.collection
-  parent: system.admin_content
+  parent: helfi_api_base.integrations
 
