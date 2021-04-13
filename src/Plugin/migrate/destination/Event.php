@@ -31,7 +31,7 @@ final class Event extends TranslatableEntityBase {
   protected function getTranslatableFields(): array {
     return [
       'name' => 'name',
-      'description' => 'description',
+      'description' => 'description/value',
       'short_description' => 'short_description',
       'provider' => 'provider',
       'info_url' => 'info_url',

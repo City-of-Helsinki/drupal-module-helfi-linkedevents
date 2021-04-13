@@ -8,6 +8,5 @@ dependencies:
   - helfi_api_base
   - content_translation
   - language
-  - migrate_drupal
   - link
   - datetime

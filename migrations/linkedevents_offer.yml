@@ -9,7 +9,7 @@ migration_tags:
   - linkedevents
 label: 'Linked Events Offer'
 source:
-  plugin: linkedevents_offer:linkedevents_event
+  plugin: linkedevents_offer
   add_revision_id: false
   include_translations: false
   track_changes: true

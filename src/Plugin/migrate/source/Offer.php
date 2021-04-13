@@ -1,20 +1,52 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Drupal\helfi_linkedevents\Plugin\migrate\source;
 
-use Drupal\migrate_drupal\Plugin\migrate\source\ContentEntity;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
+use Drupal\migrate\Plugin\MigrationInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Source plugin for retrieving data from Linked Events.
  *
  * @MigrateSource(
  *   id = "linkedevents_offer",
- *   deriver = "\Drupal\migrate_drupal\Plugin\migrate\source\ContentEntityDeriver",
  * )
  */
-class Offer extends ContentEntity {
+class Offer extends SourcePluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The entity storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $storage;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, EntityTypeManagerInterface $entity_type_manager) {
+    $this->storage = $entity_type_manager->getStorage('linkedevents_event');
+
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $migration,
+      $container->get('entity_type.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -24,22 +56,25 @@ class Offer extends ContentEntity {
   }
 
   /**
-   * Loads and yields entities, one at a time.
-   *
-   * @param array $ids
-   *   The entity IDs.
-   *
-   * @return \Generator
-   *   An iterable of the loaded entities.
+   * {@inheritdoc}
    */
-  protected function yieldEntities(array $ids) {
-    $storage = $this->entityTypeManager
-      ->getStorage($this->entityType->id());
-    foreach ($ids as $id) {
-      /**
-      * @var \Drupal\Core\Entity\ContentEntityInterface $entity
-      */
-      $entity = $storage->load($id);
+  public function fields() {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __toString() {
+    return 'LinkedEventsOffer';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function initializeIterator() {
+    /** @var \Drupal\helfi_linkedevents\Entity\Event $entity */
+    foreach ($this->storage->loadMultiple() ?? [] as $entity) {
       $data = $entity->getData('offer');
       if ($data) {
         $data['id'] = hash('sha256', json_encode($data));

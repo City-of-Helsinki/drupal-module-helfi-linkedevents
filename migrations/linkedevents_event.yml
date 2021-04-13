@@ -21,11 +21,12 @@ process:
   location: 'location/@id'
   provider: provider
   short_description: short_description
-  description: description
+  description/format:
+    plugin: default_value
+    default_value: full_html
   info_url: info_url
   start_time: start_time
   end_time: end_time
-  offers:  'offers/info_url'
   sub_events: 'sub_events/@id'
   keywords: 'keywords/@id'
   images: 'images/url'
