@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/City-of-Helsinki/drupal-module-helfi-linkedevents/workflows/CI/badge.svg)
 
-Integrates [Linked Events](https://api.hel.fi/linkedevents/v1/) with Drupal.
+This is a proof-of-concept module that integrates [Linked Events](https://api.hel.fi/linkedevents/v1/) with Drupal. The module is not maintained at the moment (02-2023) and should not be used.
 
 ## Requirements
 
